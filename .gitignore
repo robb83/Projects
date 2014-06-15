@@ -1,4 +1,8 @@
 *.pyc
-*.pyproj
-*.sln
 *.suo
+Solovers/Solitaire/project/
+Solovers/Solitaire/source/unknow_states/
+Solovers/Solitaire/original_media/
+Solovers/Minesweeper/project/
+Solovers/Minesweeper/source/unknow_states/
+Solovers/Minesweeper/original_media/
