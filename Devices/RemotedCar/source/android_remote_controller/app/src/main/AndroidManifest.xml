@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.simple.remotecontrollercar"
+          android:versionCode="1"
+          android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="8"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <application android:label="@string/app_name">
+        <activity android:name=".DeviceListActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ObstacleAvoidanceActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ManualStearingActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".AccelerometerStearingActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".VoiceStearingActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ExactStearingActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".MainMenuActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest> 
