@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Remote Shooter</string>
+    <string name="buttonPauseResume">Start pointer</string>
+    <string name="buttonPausePause">Stop pointer</string>
+    <string name="buttonReset">Request Restart</string>
+    <string name="buttonAction1">Shoot</string>
+    <string name="buttonDisconnect">Disconnect</string>
+    <string name="buttonConnect">Join Game</string>
+    <string name="textIpAddress">Game server address:</string>
+    <string name="textPortNumber">Game server port:</string>
+    <string name="textPlayerName">Player/Game name:</string>
+    <string name="textRequiredFields">Please...</string>
+    <string name="rbOrientation" >Use orientation sensor</string>
+    <string name="rbAcceleration" >Use accelerometer sensor</string>
+    <string name="textNotSupportedSensor" >Not supported sensor</string>
+    <string name="buttonCreateGame">New game</string>
+    <string name="textControllerType">Controller type:</string>
+</resources>

@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.simple.remoteshooter.MainActivity">
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/textPlayerName"/>
+
+    <EditText
+        android:id="@+id/editPlayerName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/textIpAddress"/>
+
+    <EditText
+        android:id="@+id/editHostAddress"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/textPortNumber"/>
+
+    <EditText
+        android:id="@+id/editHostPort"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:numeric="integer" />
+
+    <Button android:id="@+id/buttonConnect"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonConnect" />
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/textControllerType"/>
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbAcceleration"
+            android:id="@+id/rbAcceleration"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbOrientation"
+            android:id="@+id/rbOrientation"
+            android:checked="false" />
+    </RadioGroup>
+</LinearLayout>

@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.simple.remoteshooter.MainActivity">
+
+    <EditText
+        android:id="@+id/editPlayerName"
+        android:layout_width="fill_parent"
+        android:editable="false"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+
+    <Button android:id="@+id/buttonAction1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="13"
+        android:text="@string/buttonAction1" />
+
+    <Button android:id="@+id/buttonReset"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/buttonReset" />
+
+    <Button android:id="@+id/buttonPause"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/buttonPauseResume" />
+
+    <Button android:id="@+id/buttonDisconnect"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/buttonDisconnect" />
+</LinearLayout>
