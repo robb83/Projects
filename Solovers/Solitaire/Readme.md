@@ -2,7 +2,7 @@
 
 ## Demo ##
 
-[Watch This Video](presentation/solitaire.html)
+[Watch This Video](http://robb83.github.io/#solover-solitaire)
 
 ## How to Start ##
 
@@ -10,6 +10,7 @@
     python.exe main.py
 
 ## Requirments ##
+
 * Microsoft Windows 7
 * Microsoft Solitaire
 * [opencv 2.4.9](http://opencv.org/)
@@ -40,4 +41,4 @@
 
 6. [For OpenCV and python integration walkthrought this guide](http://docs.opencv.org/trunk/doc/py_tutorials/py_setup/py_setup_in_windows/py_setup_in_windows.html)
 
-<https://github.com/robb83/>
+<http://robb83.github.io>
