@@ -1,8 +1,6 @@
-// gcc -Wall -O2 -o rssfeeder main.c -lcurl -lxml2 -I/usr/include/libxml2
+// gcc -Wall -O2 -o rssfeeder main.c -lcurl -lxml2 -lhiredis -I/usr/include/libxml2
 //TODOS:
-//	xmlFree xmlChar
-//  rfc3339 date parser
-//  storage for items (redis)
+//	refactors
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,10 +8,179 @@
 #include <curl/curl.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <hiredis/hiredis.h>
+
+#define ISDIGIT(v) (v >= '0' && v <= '9')
+#define XMLFREE(v) \
+if (v) { \
+	xmlFree(v); \
+	v = NULL; \
+}
 
 char* buffer;
 size_t buffer_length;
 int buffer_offset;
+redisContext *redis;
+redisReply *reply;
+char feedID[64];
+char* feedurl;
+
+int redisStringInteger(char* storage, size_t storage_size, redisReply *r) {
+	if (r == NULL || r->type == REDIS_REPLY_NIL)
+		return -1;
+	
+	if (r->type == REDIS_REPLY_INTEGER) {
+		snprintf(storage, storage_size, "%lld", reply->integer);
+		
+		return 0;
+	} else if (r->type == REDIS_REPLY_STRING) {
+		strncpy(storage, r->str, storage_size);
+		
+		return 0;
+	}
+	
+	return -1;
+}
+
+int storeChannel(char* title, char* link) {
+	if (!title || !link)
+		return -1;
+		
+	printf("Create Channel\n\ttitle: %s\n\tlink: %s\n\tfeed: %s\n", title, link, feedurl);
+	
+	// generate id
+	reply = redisCommand(redis, "INCR id:feed");
+	if (reply == NULL || (reply->type != REDIS_REPLY_INTEGER && reply->type != REDIS_REPLY_STRING)) {
+		freeReplyObject(reply);
+		return -1;
+	}
+	
+	redisStringInteger(feedID, sizeof(feedID), reply);
+	freeReplyObject(reply);
+
+	// create hash
+	reply = redisCommand(redis, "HMSET feed:%s feedid %s feed %s title %s link %s", 
+			feedID, feedID, feedurl, title, link);
+	freeReplyObject(reply);
+
+	// create lookup
+	reply = redisCommand(redis, "ZADD feedlookup %s %s", feedID, feedurl);
+	freeReplyObject(reply);
+
+	return 0;
+}
+
+int storeItem(char *id, char* title, char* link, time_t updated) {
+	char storage1[64], storage2[64];
+
+	if (!title || !link)
+		return -1;
+	
+	if (!id) id = link;
+	
+	// check exists
+	reply = redisCommand(redis,"ZSCORE itemlookup %s:%s", feedID, id);
+	if (reply == NULL || reply->type != REDIS_REPLY_NIL) {
+		freeReplyObject(reply);
+		return -1;
+	}
+	freeReplyObject(reply);
+	
+	printf("Item: %s\n", title);
+	
+	// generate id
+	reply = redisCommand(redis,"INCR id:item");
+	if (reply == NULL || (reply->type != REDIS_REPLY_INTEGER && reply->type != REDIS_REPLY_STRING)) {
+		freeReplyObject(reply);
+		return -1;
+	}
+	redisStringInteger(storage1, sizeof(storage1), reply);
+	freeReplyObject(reply);
+
+	snprintf(storage2, sizeof(storage2), "%ld", updated);
+	
+	// create hash
+	reply = redisCommand(redis,"HMSET item:%s itemid %s id %s link %s title %s updated %s", storage1, storage1, id, link, title, storage2);
+	freeReplyObject(reply);
+	
+	// create lookup
+	reply = redisCommand(redis,"ZADD feed:%s:items %s %s", feedID, storage2, storage1);
+	freeReplyObject(reply);	
+	
+	reply = redisCommand(redis,"ZADD itemlookup %s %s:%s", storage1, feedID, id);
+	freeReplyObject(reply);
+
+	return 0;
+}
+
+time_t simple_rfc3339(char* string) {
+	int dy, dm, dd;
+	int th, tm, ts;
+	int oh, om, osign;
+	char current;
+	
+	if (!string)
+		return (time_t)0;
+	
+	// date
+	if (sscanf(string, "%04d-%02d-%02d", &dy, &dm, &dd) == 3) {
+		string += 10;
+		
+		if (*string++ != 'T')
+			return (time_t)0;
+		
+		// time
+		if (sscanf(string, "%02d:%02d:%02d", &th, &tm, &ts) == 3) {
+			string += 8;
+			
+			current = *string;
+			
+			// optional: second fraction
+			if (current == '.') {
+				++string;
+				while(ISDIGIT(*string))
+					++string;
+					
+				current = *string;
+			}
+			
+			if (current == 'Z') {
+				oh = om = 0;
+				osign = 1;
+			} else if (current == '-') {
+				++string;
+				if (sscanf(string, "%02d:%02d", &oh, &om) != 2)
+					return (time_t)0;
+				osign = -1;
+			} else if (current == '+') {
+				++string; 
+				if (sscanf(string, "%02d:%02d", &oh, &om) != 2)
+					return (time_t)0;
+				osign = 1;
+			} else {
+				return (time_t)0;
+			}
+			
+			struct tm timeinfo;
+			timeinfo.tm_wday = timeinfo.tm_yday = 0;
+			timeinfo.tm_zone = NULL;
+			timeinfo.tm_isdst = -1;
+			
+			timeinfo.tm_year = dy - 1900;
+			timeinfo.tm_mon = dm - 1;
+			timeinfo.tm_mday = dd;
+			
+			timeinfo.tm_hour = th;
+			timeinfo.tm_min = tm;
+			timeinfo.tm_sec = ts;
+			
+			// convert to utc
+			return timegm(&timeinfo) - (((oh * 60 * 60) + (om * 60)) * osign);
+		}
+	}
+	
+	return (time_t)0;
+}
 
 size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 	size_t realsize = size * nmemb;
@@ -83,16 +250,17 @@ void processRssConent(xmlNode *node) {
 	xmlNode *cur_channel = NULL;
 	xmlNode *cur_item = NULL;
 	
-	char *item_title = NULL, *item_date = NULL, *item_link = NULL, *item_description = NULL;
-	char *channel_title = NULL, *channel_date = NULL, *channel_link = NULL, *channel_description = NULL;
+	char *item_title = NULL, *item_date = NULL, *item_link = NULL, *item_id = NULL;
+	char *channel_title = NULL, *channel_link = NULL;
 	time_t temp_ticks;
 	
-	xmlChar *xmlCharChannel = (xmlChar *)"channel";
-	xmlChar *xmlCharTitle = (xmlChar *)"title";
-	xmlChar *xmlCharLink = (xmlChar *)"link";
-	xmlChar *xmlCharDescription = (xmlChar *)"description";
-	xmlChar *xmlCharItem = (xmlChar *)"item";
-	xmlChar *xmlCharPubDate = (xmlChar *)"pubDate";
+	xmlChar xmlCharChannel[] = "channel";
+	xmlChar xmlCharTitle[] = "title";
+	xmlChar xmlCharLink[] = "link";
+	// xmlChar xmlCharDescription[] = "description";
+	xmlChar xmlCharItem[] = "item";
+	xmlChar xmlCharPubDate[] = "pubDate";
+	xmlChar xmlCharGuid[] = "guid";
 	
 	// rss
 	for (cur_node = node; cur_node; cur_node = cur_node->next) {
@@ -103,28 +271,46 @@ void processRssConent(xmlNode *node) {
 				for (cur_channel = cur_node->children; cur_channel; cur_channel = cur_channel->next) {
 					if (cur_channel->type == XML_ELEMENT_NODE) {
 						if (xmlStrcmp(cur_channel->name, xmlCharTitle) == 0) {
-							channel_title = (char*)xmlNodeGetContent(cur_channel);
-						} else if (xmlStrcmp(cur_channel->name, xmlCharLink) == 0) {							
-							channel_link = (char*)xmlNodeGetContent(cur_channel);
-						} else if (xmlStrcmp(cur_channel->name, xmlCharDescription) == 0) {
-							channel_description = (char*)xmlNodeGetContent(cur_channel);
-						} else if (xmlStrcmp(cur_channel->name, xmlCharPubDate) == 0) {
-							channel_date = (char*)xmlNodeGetContent(cur_channel);
-						} else if (xmlStrcmp(cur_channel->name, xmlCharItem) == 0) {
 							
-							item_title = item_link = item_description = item_date = NULL;
+							XMLFREE(channel_title)
+							channel_title = (char*)xmlNodeGetContent(cur_channel);
+							
+						} else if (xmlStrcmp(cur_channel->name, xmlCharLink) == 0) {							
+							
+							XMLFREE(channel_link)
+							channel_link = (char*)xmlNodeGetContent(cur_channel);
+							
+						} else if (xmlStrcmp(cur_channel->name, xmlCharItem) == 0) {
+																		
+							if (feedID[0] == '\0') {
+								if (storeChannel(channel_title, channel_link) == -1) {
+									break;
+								}
+							}
 							
 							// item
 							for (cur_item = cur_channel->children; cur_item; cur_item = cur_item->next) {
 								if (cur_item->type == XML_ELEMENT_NODE) {
 									if (xmlStrcmp(cur_item->name, xmlCharTitle) == 0) {
+										
+										XMLFREE(item_title)
 										item_title = (char*)xmlNodeGetContent(cur_item);
+									
 									} else if (xmlStrcmp(cur_item->name, xmlCharLink) == 0) {
+										
+										XMLFREE(item_link)
 										item_link = (char*)xmlNodeGetContent(cur_item);
-									} else if (xmlStrcmp(cur_item->name, xmlCharDescription) == 0) {
-										item_description = (char*)xmlNodeGetContent(cur_item);
+										
+									} else if (xmlStrcmp(cur_item->name, xmlCharGuid) == 0) {
+										
+										XMLFREE(item_id)
+										item_id = (char*)xmlNodeGetContent(cur_item);
+										
 									} else if (xmlStrcmp(cur_item->name, xmlCharPubDate) == 0) {
+										
+										XMLFREE(item_date)
 										item_date = (char*)xmlNodeGetContent(cur_item);
+										
 									}
 								}
 							}
@@ -132,34 +318,18 @@ void processRssConent(xmlNode *node) {
 							// rfc822 to seconds
 							temp_ticks = curl_getdate(item_date, NULL);
 							
-							printf("\ttitle: %s\n" , item_title);
-							printf("\tlink: %s\n" , item_link);
-							printf("\tpubDate: %d\n" , (int)temp_ticks);
-							printf("\tdescription: %s\n" , item_description);
+							storeItem(item_id, item_title, item_link, temp_ticks);
+							
+							XMLFREE(item_title)
+							XMLFREE(item_link)
+							XMLFREE(item_id)
+							XMLFREE(item_date)
 						}
 					}
 				}
 				
-				printf("\nChannel info:\n");
-							
-				if (channel_title) {
-					printf("title: %s\n" , channel_title);
-				}
-				
-				if (channel_link) {
-					printf("link: %s\n" , channel_link);
-				}
-				
-				if (channel_date) {
-					// rfc822 to seconds
-					temp_ticks = curl_getdate(channel_date, NULL);
-				
-					printf("pubDate: %d\n" , (int)temp_ticks);
-				}
-				
-				if (channel_description) {
-					printf("description: %s\n" , channel_description);
-				}
+				XMLFREE(channel_title)
+				XMLFREE(channel_link)
 			}
 		}
 	}
@@ -169,79 +339,98 @@ void processAtomContent(xmlNode *node) {
 	xmlNode *cur_channel = NULL;
 	xmlNode *cur_item = NULL;
 	
-	char *item_title = NULL, *item_date = NULL, *item_link = NULL;
-	char *channel_title = NULL, *channel_date = NULL, *channel_link = NULL;
+	char *item_title = NULL, *item_date = NULL, *item_link = NULL, *item_id = NULL;
+	char *channel_title = NULL, *channel_link = NULL;
 	
-	xmlChar *xmlCharTitle = (xmlChar *)"title";
-	xmlChar *xmlCharLink = (xmlChar *)"link";
-	xmlChar *xmlCharEntry = (xmlChar *)"entry";
-	xmlChar *xmlCharUpdated = (xmlChar *)"updated";
-	xmlChar *xmlCharHref = (xmlChar *)"href";
-	xmlChar *xmlCharRel = (xmlChar *)"rel";
-	xmlChar *xmlCharAlternate = (xmlChar *)"alternate";
+	xmlChar xmlCharTitle[] = "title";
+	xmlChar xmlCharLink[] = "link";
+	xmlChar xmlCharEntry[] = "entry";
+	xmlChar xmlCharUpdated[] = "updated";
+	xmlChar xmlCharHref[] = "href";
+	xmlChar xmlCharRel[] = "rel";
+	xmlChar xmlCharAlternate[] = "alternate";
+	xmlChar xmlCharId[] = "id";
 	xmlChar *temp;
+	time_t temp_ticks;
 	
 	// feed
 	for (cur_channel = node; cur_channel; cur_channel = cur_channel->next) {
 		if (cur_channel->type == XML_ELEMENT_NODE) {
 			if (xmlStrcmp(cur_channel->name, xmlCharTitle) == 0) {
+				
+				XMLFREE(channel_title)
 				channel_title = (char*)xmlNodeGetContent(cur_channel);
+				
 			} else if (xmlStrcmp(cur_channel->name, xmlCharLink) == 0) {
+				
+				
 				temp = xmlGetProp(cur_channel, xmlCharRel);
 				if (temp == NULL || xmlStrcmp(temp, xmlCharAlternate)) {
+					XMLFREE(channel_link)
 					channel_link = (char*)xmlGetProp(cur_channel, xmlCharHref);
 				}
-				xmlFree(temp);
-			} else if (xmlStrcmp(cur_channel->name, xmlCharUpdated) == 0) {
-				channel_date = (char*)xmlNodeGetContent(cur_channel);
+				XMLFREE(temp)
+		
 			} else if (xmlStrcmp(cur_channel->name, xmlCharEntry) == 0) {
 				
-				item_title = item_link = item_date = NULL;
+				if (feedID[0] == '\0') {
+					if (storeChannel(channel_title, channel_link) == -1) {
+						break;
+					}
+				}
 				
 				// entry
 				for (cur_item = cur_channel->children; cur_item; cur_item = cur_item->next) {
 					if (cur_item->type == XML_ELEMENT_NODE) {
 						if (xmlStrcmp(cur_item->name, xmlCharTitle) == 0) {
+							
+							XMLFREE(item_title)
 							item_title = (char*)xmlNodeGetContent(cur_item);
+							
 						} else if (xmlStrcmp(cur_item->name, xmlCharLink) == 0) {
+							
 							temp = xmlGetProp(cur_item, xmlCharRel);
 							if (temp == NULL || xmlStrcmp(temp, xmlCharAlternate)) {
+								XMLFREE(item_link)
 								item_link = (char*)xmlGetProp(cur_item, xmlCharHref);
 							}
-							xmlFree(temp);
+							XMLFREE(temp)
+							
 						} else if (xmlStrcmp(cur_item->name, xmlCharUpdated) == 0) {
+							
+							XMLFREE(item_date)
 							item_date = (char*)xmlNodeGetContent(cur_item);
+							
+						} else if (xmlStrcmp(cur_item->name, xmlCharId) == 0) {
+							
+							XMLFREE(item_id)
+							item_id = (char*)xmlNodeGetContent(cur_item);
+							
 						}
 					}
 				}
 			
-				printf("\ttitle: %s\n" , item_title);
-				printf("\tlink: %s\n" , item_link);
-				printf("\tupdated: %s\n" , item_date);
+				temp_ticks = simple_rfc3339(item_date);
+				
+				storeItem(item_id, item_title, item_link, temp_ticks);
+				
+				XMLFREE(item_title)
+				XMLFREE(item_link)
+				XMLFREE(item_date)
+				XMLFREE(item_id)
 			}
 		}
 	}
 	
-	printf("\nChannel info:\n");
-				
-	if (channel_title) {
-		printf("title: %s\n" , channel_title);
-	}
-	
-	if (channel_link) {
-		printf("link: %s\n" , channel_link);
-	}
-	
-	if (channel_date) {
-		printf("updated: %s\n" , channel_date);
-	}
+	XMLFREE(channel_title)
+	XMLFREE(channel_link)
 }
 
 int processBufferContent() {
 	xmlDoc *doc = NULL;	
 	xmlNode *root = NULL;
-	xmlChar *xmlCharRss = (xmlChar *)"rss";
-	xmlChar *xmlCharAtom = (xmlChar *)"feed";
+	xmlChar xmlCharRss[] = "rss";
+	xmlChar xmlCharAtom[] = "feed";
 	
 	doc = xmlReadMemory(buffer, buffer_offset, NULL, NULL, 0);
 	if (doc == NULL) {
@@ -271,6 +460,8 @@ int main(int argc, char** argv) {
 		printf("Usage: httpurl\n");
 		return -1;
 	}
+	
+	feedurl = argv[1];
 
 	// initialize content buffer
 	buffer_offset = 0;
@@ -284,11 +475,38 @@ int main(int argc, char** argv) {
 	}
 	
 	// download content with curl
-	if (downloadContentToBuffer(argv[1]) != 0) {
+	if (downloadContentToBuffer(feedurl) != 0) {
 		printf("Download failed\n");
 		return -1;
 	}
 
+	struct timeval timeout = { 1, 500000 };
+	redis = redisConnectWithTimeout("localhost", 6379, timeout);
+	if (redis == NULL || redis->err) {
+		printf("Redis connection failed\n");	
+		return -1;
+	}
+	
+	// check exists
+	reply = redisCommand(redis,"ZSCORE feedlookup %s", feedurl);
+	if (reply == NULL || (reply->type != REDIS_REPLY_NIL && reply->type != REDIS_REPLY_INTEGER && reply->type != REDIS_REPLY_STRING)) {
+		printf("Redis unknow error\n");
+		freeReplyObject(reply);
+		redisFree(redis);
+		
+		return -1;
+	} else if (reply->type != REDIS_REPLY_NIL) {
+		redisStringInteger(feedID, sizeof(feedID), reply);
+	} else {
+		feedID[0] = '\0';
+	}
+	
+	freeReplyObject(reply);
+
 	// processing content with libxml2
-	return processBufferContent();
+	int response = processBufferContent();
+	
+	redisFree(redis);
+	
+	return response;
 }
