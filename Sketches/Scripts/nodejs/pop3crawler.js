@@ -98,9 +98,12 @@ var process = function(message) {
 			}
 		}
 	} else if (options.state == 6) {
+		pop3.write('QUIT\r\n');
 		options.state = 7;
+	} else if (options.state == 7) {
+		options.state = 8;
 		pop3.destroy();
-		doSomething();	
+		doSomething();
 	} else {
 		pop3.destroy();
 	}

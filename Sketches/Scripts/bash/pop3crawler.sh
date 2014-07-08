@@ -2,7 +2,7 @@
 
 HOST=pop.gmail.com
 PORT=995
-USER=usernam1@gmail.com
+USER=username1@gmail.com
 PASS=password1
 TIMEOUT=2
 MESSAGE_ARRIVED=
@@ -51,14 +51,8 @@ pop3_stat() {
 	return 1
 }
 
-pop3_quit() {
-	send "QUIT"
-	
-	return 0
-}
-
 # make SSL connection, authentication, get message number
-coproc openssl s_client -connect $HOST:$PORT
+coproc openssl s_client -connect $HOST:$PORT -crlf -quiet
 
 if skipwelcome && pop3_auth && pop3_stat; then
 	echo "STAT: $MESSAGES"
@@ -85,7 +79,8 @@ if skipwelcome && pop3_auth && pop3_stat; then
 
 				if [[ -n "$MATCHED_SUBJECT" && -n "$MATCHED_FROM" ]]; then
 					MAIL_ARRIVED=1
-					send "DELE $c"
+					sendreceiv "DELE $c"
+					sendreceiv "QUIT"
 					break
 				fi
 			else
@@ -96,7 +91,7 @@ if skipwelcome && pop3_auth && pop3_stat; then
 	fi
 fi
 
-[[ -n "$COPROC_PID" ]] && pop3_quit && kill "$COPROC_PID"
+[[ -n "$COPROC_PID" ]] && kill "$COPROC_PID"
 
 if [[ -n "$MAIL_ARRIVED" ]]; then
 	echo "Do something"
