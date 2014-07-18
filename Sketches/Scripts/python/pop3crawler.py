@@ -3,7 +3,7 @@ import re
 import os
 
 re_subject = re.compile("^Subject:.*Hello World")
-re_from = re.compile("^From:.*(username1@gmail\.com|username2@gmail.com)")
+re_from = re.compile("^From:.*(username1@gmail\.com|username2@gmail\.com)")
 
 server = poplib.POP3_SSL("pop.gmail.com")
 server.user("username1@gmail.com")
