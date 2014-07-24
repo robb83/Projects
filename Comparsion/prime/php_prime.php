@@ -27,5 +27,5 @@ for( $i = 0; $i < 5000011; $i++) {
 	if (isPrime($i)) ++$match;
 }
 
-echo $match;
+echo $match . PHP_EOL;
 

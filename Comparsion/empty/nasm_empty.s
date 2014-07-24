@@ -1,7 +1,7 @@
-bits 64
+bits 32
 section     .text
 global      _start
 
 _start:
-    mov     rax, 1
+    mov     eax, 1
     int     0x80
