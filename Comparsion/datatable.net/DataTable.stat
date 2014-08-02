@@ -1,0 +1,104 @@
+              MT    Count    TotalSize Class Name
+000007fee7a8e210        1           24 System.Reflection.__Filters
+000007fee7a8dd70        1           24 System.Collections.Generic.ObjectEqualityComparer`1[[System.RuntimeType, mscorlib]]
+000007fee7a7ff10        1           24 System.Security.Permissions.SecurityPermission
+000007fee7a7e2f0        1           24 System.Runtime.InteropServices.GCHandle
+000007fee7a7dad0        1           24 System.DBNull
+000007fee7a7b670        1           24 System.Collections.Generic.GenericEqualityComparer`1[[System.String, mscorlib]]
+000007fee7a73710        1           24 System.Collections.Generic.ObjectEqualityComparer`1[[System.Type, mscorlib]]
+000007fee54c8e80        1           24 System.Data.IndexField[]
+000007fee54c6bf0        1           24 Bid+BindingCookie
+000007fee7a7a260        1           32 Microsoft.Win32.SafeHandles.SafeFileHandle
+000007fee7a73b80        1           32 System.Security.Policy.AssemblyEvidenceFactory
+000007fee7a73a38        1           32 Microsoft.Win32.SafeHandles.SafePEFileHandle
+000007fee7a72740        1           32 System.Security.PermissionToken
+000007fee7a70a98        1           32 System.CultureAwareComparer
+000007fee7a6ae38        1           32 Microsoft.Win32.SafeHandles.SafeFileMappingHandle
+000007fee7a6ada8        1           32 Microsoft.Win32.SafeHandles.SafeViewOfFileHandle
+000007fee7a353c8        1           32 System.IO.TextReader+SyncTextReader
+000007fee54c6c38        1           32 Bid+AutoInit
+000007fee54c6280        1           32 System.Data.DataRowBuilder
+000007fee7aab168        1           40 System.Collections.Generic.List`1[[System.Int32, mscorlib]]
+000007fee7a6b178        1           40 System.IO.Stream+NullStream
+000007fee7a6aca0        1           40 System.Text.InternalEncoderBestFitFallback
+000007fee7a6a4a0        1           40 Microsoft.Win32.Win32Native+InputRecord
+000007fee54c5a80        1           40 System.Data.DataRowCollection
+000007fee54c4f60        1           40 <CrtImplementationDetails>.ModuleUninitializer
+000007fee52e61a8        1           40 System.Collections.Generic.List`1[[System.Data.Index, System.Data]]
+000007fee52e6030        1           40 System.Collections.Generic.List`1[[System.Data.DataViewListener, System.Data]]
+000007fee52e5f00        1           40 System.Collections.Generic.List`1[[System.Data.DataView, System.Data]]
+000007fee7a7c3a0        1           48 System.Text.UTF8Encoding
+000007fee7a7b300        1           48 System.Text.StringBuilder
+000007fee7a76b80        1           48 System.SharedStatics
+000007fee7a73360        1           48 System.OperatingSystem
+000007fee7a719d0        1           48 System.Text.DecoderNLS
+000007fee7a6ad30        1           48 System.Text.InternalDecoderBestFitFallback
+000007fe937d3e98        1           48 System.Collections.Concurrent.ConcurrentDictionary`2+Tables[[System.Type, mscorlib],[System.Tuple`4[[System.Boolean, mscorlib],[System.Boolean, mscorlib],[System.Boolean, mscorlib],[System.Boolean, mscorlib]], mscorlib]]
+000007fee7a79ee0        1           56 System.Text.UnicodeEncoding
+000007fee7a728c8        1           56 System.Security.PermissionTokenFactory
+000007fee7a727f0        1           56 System.Security.Util.TokenBasedSet
+000007fee7a6a520        1           56 System.IO.__ConsoleStream
+000007fee54c6f30        1           56 System.Data.ConstraintCollection
+000007fee54c61c0        1           56 System.Data.RecordManager
+000007fee7a7f1d8        1           64 System.Reflection.RuntimeModule
+000007fee7a7a148        2           64 System.Text.DecoderReplacementFallback
+000007fee7a7a0b8        2           64 System.Text.EncoderReplacementFallback
+000007fee7a77f58        1           64 System.Security.PermissionSet
+000007fee7a73ae0        1           64 System.Security.Policy.PEFileEvidenceFactory
+000007fee7a73400        1           64 System.Globalization.CompareInfo
+000007fee54c6fb0        1           64 System.Data.DataRowCollection+DataRowTree
+000007fee54c6b60        1           64 Bid+CtrlCB
+000007fe937d3b00        1           64 System.Collections.Concurrent.ConcurrentDictionary`2[[System.Type, mscorlib],[System.Tuple`4[[System.Boolean, mscorlib],[System.Boolean, mscorlib],[System.Boolean, mscorlib],[System.Boolean, mscorlib]], mscorlib]]
+000007fe937d39d8        1           64 System.Func`2[[System.Type, mscorlib],[System.Tuple`4[[System.Boolean, mscorlib],[System.Boolean, mscorlib],[System.Boolean, mscorlib],[System.Boolean, mscorlib]], mscorlib]]
+000007fee7a779b0        1           72 System.Security.Policy.Evidence
+000007fee7a7c590        2           80 System.Collections.ArrayList
+000007fee73b0300        1           80 System.Collections.Generic.Dictionary`2[[System.RuntimeType, mscorlib],[System.RuntimeType, mscorlib]]
+000007fee73af660        1           80 System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Globalization.CultureData, mscorlib]]
+000007fee73af488        1           80 System.Collections.Generic.Dictionary`2[[System.Type, mscorlib],[System.Security.Policy.EvidenceTypeDescriptor, mscorlib]]
+000007fee52e5c08        1           80 System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Data.DataColumn, System.Data]]
+000007fee7a7cc50        3           96 System.Guid
+000007fee7a7b828        1           96 System.Collections.Generic.Dictionary`2+Entry[[System.String, mscorlib],[System.Globalization.CultureData, mscorlib]][]
+000007fee7a7b180        3           96 System.Version
+000007fee7a7a8e0        1           96 System.IO.UnmanagedMemoryStream
+000007fee7a792b8        4           96 System.Int32
+000007fee7a77b90        1           96 System.Threading.Thread
+000007fee7a74f58        4           96 System.UInt16
+000007fee54c5f08        1           96 System.Data.DataColumnCollection
+000007fee7a808b0        1          104 System.IO.StreamReader
+000007fee7a8e2b0        2          128 System.Reflection.TypeFilter
+000007fee7a816f0        2          128 System.EventHandler
+000007fee7a77500        1          128 System.AppDomainSetup
+000007fee7a74740        2          128 System.Threading.ReaderWriterLock
+000007fee7a6aaa0        1          128 System.Text.SBCSCodePageEncoding
+000007fee7a7b290        1          160 System.Globalization.CalendarData
+000007fee7a76a10        1          160 System.ExecutionEngineException
+000007fee7a76998        1          160 System.StackOverflowException
+000007fee7a76920        1          160 System.OutOfMemoryException
+000007fee7a76738        1          160 System.Exception
+000007fee7a79d18        3          168 System.Reflection.RuntimeAssembly
+000007fee7a74ad8        2          176 System.Collections.Hashtable+SyncHashtable
+000007fee7a76c40        1          216 System.AppDomain
+000007fee7a8dc40        1          288 System.Collections.Generic.Dictionary`2+Entry[[System.RuntimeType, mscorlib],[System.RuntimeType, mscorlib]][]
+000007fee7a7a690        2          304 System.Byte[]
+000007fee7a76a88        2          320 System.Threading.ThreadAbortException
+000007fee7a7a708        5          400 System.Collections.Hashtable
+000007fee7a7b950        2          432 System.Globalization.NumberFormatInfo
+000007fee7a76ae8       18          432 System.Object
+000007fee7a74678        1          432 System.Collections.Generic.Dictionary`2+Entry[[System.Type, mscorlib],[System.Security.Policy.EvidenceTypeDescriptor, mscorlib]][]
+000007fee54c94b0        1          432 System.Collections.Generic.Dictionary`2+Entry[[System.String, mscorlib],[System.Data.DataColumn, System.Data]][]
+000007fee7a7ada8        4          512 System.Globalization.CultureInfo
+000007fee54c51b0        1          512 System.Data.DataTable
+000007fee7a73838        5          672 System.Collections.Hashtable+bucket[]
+000007fee7a77790        9         1182 System.Char[]
+000007fee54c87c8       16         1280 System.Data.Common.StringStorage
+000007fee54c91c0       44         2112 System.Data.RBTree`1+TreePage[[System.Data.DataRow, System.Data]]
+000007fee7a7b108        4         2144 System.Globalization.CultureData
+000007fee54c5bd0       16         3456 System.Data.DataColumn
+000007fee7a79258       58         4380 System.Int32[]
+000007fee7a787f8       87         4872 System.RuntimeType
+000007fee54c93b8       44       784416 System.Data.RBTree`1+Node[[System.Data.DataRow, System.Data]][]
+000007fee54c5910    19231      1846176 System.Data.DataRow
+00000000000ff3d0       28      2515968      Free
+000007fee7a24458       59      4527888 System.Object[]
+000007fee7a76508   231703     11395208 System.String
+Total 251439 objects
