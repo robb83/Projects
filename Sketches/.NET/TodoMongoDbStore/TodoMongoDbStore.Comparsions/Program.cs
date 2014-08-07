@@ -27,6 +27,15 @@ namespace TodoMongoDbStore.Comparsions
 
 			return ByteArrayToString(md5Instance.ComputeHash (Encoding.UTF8.GetBytes (content)));
 		}
+		
+		static void TypedVsBsonDocument() {
+			TypedDocumentBsonDocument test = new TypedDocumentBsonDocument (db);
+
+			test.TypedDocumentTest (10);
+			test.BsonDocumentTest (10);
+			test.TypedDocumentTest (10);
+			test.BsonDocumentTest (10);
+		}
 
 		static void EvalVsFindMd5() {
 			EvalFindOneMd5 test = new EvalFindOneMd5 (db);
@@ -86,17 +95,20 @@ namespace TodoMongoDbStore.Comparsions
 				return;
 			}
 
-//			db.DropCollection ("todos");
-//			var todoCollection = db.GetCollection ("todos");
-//			// quick order by date
-//			todoCollection.CreateIndex ("created");
-//			// enable fulltext search
-//			todoCollection.CreateIndex (IndexKeys.Text ("description"));
-//
-//			PopulateData ();
+			// db.DropCollection ("todos");
+			if (!db.CollectionExists ("todos")) {
+				var todoCollection = db.GetCollection ("todos");
+				// quick order by date
+				todoCollection.CreateIndex ("created");
+				// enable fulltext search
+				todoCollection.CreateIndex (IndexKeys.Text ("description"));
+
+				PopulateData ();
+			}
 
 			EvalVsFind ();
 			EvalVsFindMd5 ();
+			TypedVsBsonDocument ();
 		}
 	}
 }

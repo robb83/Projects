@@ -45,6 +45,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EvalFindOne.cs" />
     <Compile Include="EvalFindOneMd5.cs" />
+    <Compile Include="TypedDocumentBsonDocument.cs" />
+    <Compile Include="Todo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
