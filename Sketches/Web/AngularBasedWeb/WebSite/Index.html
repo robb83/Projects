@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>Simple Application</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link href="Assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="Assets/css/Site.css" rel="stylesheet" />
+    <script src="Assets/js/angular.js"></script>
+    <script src="Assets/js/angular-ui-router.js"></script>
+    <script src="Assets/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script src="Application/Services/ControllerResolver.js"></script>
+    <script src="Application/Application.js"></script>
+    <script src="Application/Directives/PasswordVerify.js"></script>
+    <script src="Application/Controllers/ApplicationFrameController.js"></script>
+    <script src="Application/Controllers/AuthenticationController.js"></script>
+    <script src="Application/Controllers/ProductDetailController.js"></script>
+    <script src="Application/Controllers/ProductsController.js"></script>
+    <script src="Application/Controllers/ForgottenPasswordController.js"></script>
+    <script src="Application/Controllers/AccountSettingsController.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div ui-view></div>
+    </div>
+</body>
+</html>

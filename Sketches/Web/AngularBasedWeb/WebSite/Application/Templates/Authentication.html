@@ -1,0 +1,22 @@
+﻿<div class="form-signin">
+    <form name="form" novalidate>
+        <h2 class="form-signin-heading">Sign In</h2>
+
+        <p>
+            <label for="username">Username: </label>
+            <input type="text" name="username" ng-model="username" class="form-control" required/>
+            <span ng-show="form.username.$dirty && form.username.$error.required">Required</span>
+        </p>
+
+        <p>
+            <label for="password">Password: </label>
+            <input type="password" name="password" ng-model="password" class="form-control" required/>
+            <span ng-show="form.password.$dirty && form.password.$error.required">Required</span>
+        </p>
+
+        <p>
+            <button ng-click="authentication()" ng-disabled="form.$invalid" class="btn btn-lg btn-primary btn-block">Login</button>
+            <a href="#" ng-click="forgottenPassword()">Forgotten Password</a>
+        </p>
+    </form>
+</div>

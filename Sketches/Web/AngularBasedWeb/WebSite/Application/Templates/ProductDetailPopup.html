@@ -1,0 +1,13 @@
+﻿<div class="modal-header">
+    <h3>Product - {{ product.ID }}</h3>
+</div>
+<div class="modal-body">
+    <div>
+        <div>Name: {{ product.Name }}</div>
+        <div>Price: {{ product.Price }} {{ product.Currency }}</div>
+        <div>Created: {{ product.Created }}</div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$parent.$close()">Cancel</button>
+</div>

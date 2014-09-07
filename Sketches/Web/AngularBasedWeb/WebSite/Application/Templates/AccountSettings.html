@@ -1,0 +1,28 @@
+﻿<div class="form-accountSettings">
+    <form name="form" novalidate>
+        <h2>Account Settings</h2>
+
+        <p>
+            <label for="password">Current Password: </label>
+            <input type="password" name="currentPassword" ng-model="currentPassword" class="form-control" required />
+            <span ng-show="form.currentPassword.$dirty && form.currentPassword.$error.required">Required</span>
+        </p>
+
+        <p>
+            <label for="password">New Password: </label>
+            <input type="password" name="newPassword1" ng-model="newPassword1" class="form-control" required />
+            <span ng-show="form.newPassword1.$dirty && form.newPassword1.$error.required">Required</span>
+        </p>
+
+        <p>
+            <label for="password">Config New Password: </label>
+            <input type="password" name="newPassword2" ng-model="newPassword2" class="form-control" required data-password-verify="newPassword1" />
+            <span ng-show="form.newPassword2.$dirty && form.newPassword2.$error.required">Required</span>
+            <span ng-show="form.newPassword2.$error.passwordVerify">Fields are not equal!</span>
+        </p>
+
+        <p>
+            <button ng-click="changePassword()" ng-disabled="form.$invalid" class="btn btn-lg btn-primary btn-block">Change Password</button>
+        </p>
+    </form>
+</div>

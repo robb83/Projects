@@ -1,0 +1,56 @@
+﻿<h2>Products</h2>
+
+<div>
+    <form>
+        <p>
+            <input type="text" class="form-control" placeholder="Search..." ng-model="searchText" />
+        </p>
+
+        <p class="input-group">
+            <input type="text" class="form-control" ng-model="createdFrom.value" is-open="createdFrom.opened" datepicker-popup readonly max-date="createdTo.value" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event, createdFrom)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </p>
+        
+        <p class="input-group">
+            <input type="text" class="form-control" ng-model="createdTo.value" is-open="createdTo.opened" datepicker-popup readonly min-date="createdFrom.value" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event, createdTo)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </p>
+
+        <button ng-click="search()" class="btn btn-default btn-sm">Search</button>
+    </form>
+    <hr />
+    <div ng-if="totalCount > 0">
+        <pagination total-items="totalCount" ng-model="pageNumber"
+                    max-size="5" class="pagination-sm pagination-custom"
+                    boundary-links="true" rotate="true"
+                    items-per-page="pageSize"
+                    ng-change="pageChanged(pageNumber)"></pagination>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Available</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="product in products" ng-click="selected(product)">
+                    <td>{{ product.ID }}</td>
+                    <td>{{ product.Name }}</td>
+                    <td>{{ product.Price }} {{ product.Currency }}</td>
+                    <td>{{ product.Created }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <pagination total-items="totalCount" ng-model="pageNumber"
+                    max-size="5" class="pagination-sm pagination-custom"
+                    boundary-links="true" rotate="true"
+                    items-per-page="pageSize"
+                    ng-change="pageChanged(pageNumber)"></pagination>
+    </div>
+</div>

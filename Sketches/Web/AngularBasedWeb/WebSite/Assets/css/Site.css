@@ -1,0 +1,13 @@
+﻿body {
+    background-color: #f8f8f8;
+}
+
+.form-signin {
+    max-width: 330px;
+    margin: 0 auto;
+}
+
+.pagination-custom {
+    margin: 0px;
+    padding: 0px;
+}
