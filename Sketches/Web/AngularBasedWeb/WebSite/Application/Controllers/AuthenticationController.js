@@ -1,15 +1,14 @@
 ﻿angular.module('app')
-.controller('AuthenticationController', ['$scope', '$state', '$http', '$rootScope', '$modal', '$stateParams', function ($scope, $state, $http, $rootScope, $modal, $stateParams) {
+.controller('AuthenticationController', ['$scope', '$state', '$rootScope', '$modal', '$stateParams', 'dataService', function ($scope, $state, $rootScope, $modal, $stateParams, dataService) {
 
     $scope.username = null;
     $scope.password = null;
 
     $scope.authentication = function () {
+        console.log(dataService);
 
-        $http.post('DataService.ashx/Authentication', {
-            Username: $scope.username,
-            Password: $scope.password
-        }).success(function (data, status, headers, config) {
+        dataService.authentication($scope.username, $scope.password)
+        .success(function (data, status, headers, config) {
             console.log(data);
 
             if (data && data.Success) {

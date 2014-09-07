@@ -1,5 +1,5 @@
 ﻿angular.module('app')
-.controller('ForgottenPasswordController', ['$scope', '$state', '$http', '$rootScope', '$modal', function ($scope, $state, $http, $rootScope, $modal) {
+.controller('ForgottenPasswordController', ['$scope', '$state', '$rootScope', '$modal', 'dataService', function ($scope, $state, $rootScope, $modal, dataService) {
 
     $scope.email = null;
     $scope.message = null;
@@ -7,9 +7,8 @@
     $scope.forgottenPasswordSend = function () {
         $scope.message = null;
 
-        $http.post('DataService.ashx/ForgottenPassword', {
-            Email: $scope.email
-        }).success(function (data, status, headers, config) {
+        dataService.forgottenPassword($scope.email)
+        .success(function (data, status, headers, config) {
             console.log(data);
 
             if (data) {

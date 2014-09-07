@@ -1,5 +1,5 @@
 ﻿angular.module('app')
-.controller('ProductDetailController', ['$scope', '$http', '$stateParams', function ($scope, $http, $stateParams) {
+.controller('ProductDetailController', ['$scope', '$stateParams', 'dataService', function ($scope, $stateParams, dataService) {
     
     console.log($stateParams);
 
@@ -10,9 +10,8 @@
         ID: $stateParams.productId
     };
 
-    $http.post('DataService.ashx/ProductDetail', {
-        ProductID: $scope.product.ID
-    }).success(function (data, status, headers, config) {
+    dataService.productDetail($scope.product.ID)
+    .success(function (data, status, headers, config) {
         console.log(data);
 
         $scope.loading = false;

@@ -27,6 +27,7 @@ public class DataService : IHttpHandler {
 
     public class ChangePasswordRequest
     {
+        public String Username { get; set; }
         public String OldPassword { get; set; }
         public String NewPassword { get; set; }
     }
@@ -108,7 +109,12 @@ public class DataService : IHttpHandler {
             return null;
         }
 
-        if (String.IsNullOrWhiteSpace(request.OldPassword))
+        if (String.IsNullOrWhiteSpace(request.Username))
+        {
+            response.Success = false;
+            response.ErrorDescription = "Missing Username.";
+        }
+        else if (String.IsNullOrWhiteSpace(request.OldPassword))
         {
             response.Success = false;
             response.ErrorDescription = "Missing Old Password.";

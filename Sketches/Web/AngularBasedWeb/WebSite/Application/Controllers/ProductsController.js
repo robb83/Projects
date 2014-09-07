@@ -1,5 +1,5 @@
 ﻿angular.module('app')
-.controller('ProductsController', ['$scope', '$state', '$stateParams', '$http', '$modal', function ($scope, $state, $stateParams, $http, $modal) {
+.controller('ProductsController', ['$scope', '$state', '$stateParams', '$modal', 'dataService', function ($scope, $state, $stateParams, $modal, dataService) {
     console.log('home.list');
     console.log($scope);
     console.log($state);
@@ -20,11 +20,8 @@
     };
 
     $scope.refresh = function () {
-        $http.post('DataService.ashx/Products', {
-            Search: $scope.searchText,
-            PageNumber: $scope.pageNumber,
-            PageSize: $scope.pageSize
-        }).success(function (data, status, headers, config) {
+        dataService.products($scope.pageNumber, $scope.pageSize, $scope.createdFrom.value, $scope.createdTo.value, $scope.searchText)
+        .success(function (data, status, headers, config) {
             console.log(data);
 
             if (data.Success) {
