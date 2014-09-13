@@ -1,5 +1,6 @@
-﻿angular.module('app')
-.controller('FrameController', ['$scope', '$state', '$stateParams', '$rootScope', function ($scope, $state, $stateParams, $rootScope) {
+﻿define(['Application', 'Services/DataService'], function (app) {
+    app
+    .registerController('ApplicationFrameController', ['$scope', '$state', '$stateParams', '$rootScope', function ($scope, $state, $stateParams, $rootScope) {
     console.log('home');
     console.log($scope);
     console.log($state);
@@ -9,4 +10,6 @@
         $rootScope.User = null;
         $state.go('authentication');
     }
-}]);
+    }]);
+
+});

@@ -1,29 +1,30 @@
-﻿angular.module('app')
-.controller('ProductDetailController', ['$scope', '$stateParams', 'dataService', function ($scope, $stateParams, dataService) {
-    
-    console.log($stateParams);
+﻿define(['Application', 'Services/DataService'], function (app) {
+    app
+    .registerController('ProductDetailController', ['$scope', '$stateParams', 'dataService', function ($scope, $stateParams, dataService) {
 
-    $scope.loading = true;
-    $scope.errorMessage = null;
+        console.log($stateParams);
 
-    $scope.product = {
-        ID: $stateParams.productId
-    };
+        $scope.loading = true;
+        $scope.errorMessage = null;
 
-    dataService.productDetail($scope.product.ID)
-    .success(function (data, status, headers, config) {
-        console.log(data);
+        $scope.product = {
+            ID: $stateParams.productId
+        };
 
-        $scope.loading = false;
-        if (data.Success) {
-            $scope.product = data.Product;
-        } else {
-            $scope.errorMessage = data.errorDescription;
-        }
+        dataService.productDetail($scope.product.ID)
+        .success(function (data, status, headers, config) {
+            $scope.loading = false;
+            if (data.Success) {
+                $scope.product = data.Product;
+            } else {
+                $scope.errorMessage = data.errorDescription;
+            }
 
-    }).error(function (data, status, headers, config) {
-        $scope.loading = false;
-        $scope.errorMessage = 'Service error';
-    });
+        }).error(function (data, status, headers, config) {
+            $scope.loading = false;
+            $scope.errorMessage = 'Service error';
+        });
 
-}]);
+    }]);
+
+});

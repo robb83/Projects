@@ -124,6 +124,11 @@ public class DataService : IHttpHandler {
             response.Success = false;
             response.ErrorDescription = "Missing New Password.";
         }
+        else if (request.NewPassword.Length < 2)
+        {
+            response.Success = false;
+            response.ErrorDescription = "New Password Is Too Short.";
+        }
         else
         {
             response.Success = true;
@@ -228,7 +233,8 @@ public class DataService : IHttpHandler {
         }
 
         if (String.IsNullOrWhiteSpace(request.Username)
-            || String.IsNullOrWhiteSpace(request.Password))
+            || String.IsNullOrWhiteSpace(request.Password)
+            || request.Password.Length < 2)
         {
             response.Success = false;
             response.ErrorDescription = "Missing username/password";
