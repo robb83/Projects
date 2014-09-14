@@ -5,18 +5,19 @@
     paths: {
         'angular'               : '../Assets/js/angular',
         'angular-ui-router'     : '../Assets/js/angular-ui-router',
-        'angular-couch-potato'  : '../Assets/js/angular-couch-potato',
-        'angular-ui-boostrap'   : '../Assets/js/angular-ui-boostrap'
+        'angular-ui-boostrap'   : '../Assets/js/angular-ui-boostrap',
+        'angular-couch-potato'  : '../Assets/js/angular-couch-potato'
     },
 
     shim: {
-        'angular': { exports: 'angular' },
-        'angular-ui-router': { deps: ['angular'] },
-        'angular-ui-boostrap': { deps: ['angular'] }
+        'angular'               : { exports: 'angular'},
+        'angular-ui-router'     : { deps: ['angular'] },
+        'angular-ui-boostrap'   : { deps: ['angular'] },
+        'angular-couch-potato'  : { deps: ['angular'] }
     }
 });
 
-require(['Application', 'angular'], function(app, angular) {
+require(['angular', 'Application', 'ApplicationConfig'], function(angular, app) {
 
     angular.element(document).ready(function() {
 
@@ -32,17 +33,3 @@ require(['Application', 'angular'], function(app, angular) {
 
     });
 });
-//<script src="Assets/js/angular.js"></script>
-//<script src="Assets/js/angular-ui-router.js"></script>
-//<script src="Assets/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
-//<script src="Application/Services/ControllerResolver.js"></script>
-//<script src="Application/Application.js"></script>
-//<script src="Application/Services/ServiceMessage.js"></script>
-//<script src="Application/Services/DataService.js"></script>
-//<script src="Application/Directives/PasswordVerify.js"></script>
-//<script src="Application/Controllers/ApplicationFrameController.js"></script>
-//<script src="Application/Controllers/AuthenticationController.js"></script>
-//<script src="Application/Controllers/ProductDetailController.js"></script>
-//<script src="Application/Controllers/ProductsController.js"></script>
-//<script src="Application/Controllers/ForgottenPasswordController.js"></script>
-//<script src="Application/Controllers/AccountSettingsController.js"></script>

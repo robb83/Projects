@@ -1,4 +1,4 @@
-﻿define(['Application', 'Services/ServiceMessage'], function (app) {
+﻿define(['Application', 'Services/MessageService'], function (app) {
     app.registerProvider('dataService', function () {
 
         var baseAddress = 'DataService.ashx';
