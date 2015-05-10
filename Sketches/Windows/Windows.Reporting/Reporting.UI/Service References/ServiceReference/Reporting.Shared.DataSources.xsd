@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Reporting.Shared.DataSources" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Reporting.Shared.DataSources" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/Reporting.Shared.Models" />
+  <xs:complexType name="PartnerDataSource">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:BaseDataSource">
+        <xs:sequence>
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Reporting.Shared.Models" minOccurs="0" name="Partners" nillable="true" type="q1:ArrayOfPartner" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PartnerDataSource" nillable="true" type="tns:PartnerDataSource" />
+  <xs:complexType name="BaseDataSource">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CompanyName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReportName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="BaseDataSource" nillable="true" type="tns:BaseDataSource" />
+</xs:schema>
