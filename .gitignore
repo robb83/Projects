@@ -8,7 +8,9 @@ Solovers/Minesweeper/project/
 Solovers/Minesweeper/source/unknow_states/
 Solovers/Minesweeper/original_media/
 Devices/RemoteShooter/original_media/
+Devices/LedMatrixDisplay/original_media/
 gradle
 .idea
 build
 original_media
+*.user

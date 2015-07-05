@@ -1,0 +1,25 @@
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "compilationOptions": {
+      "allowUnsafe": true,
+      "warningsAsErrors": true
+    },
+
+    "dependencies": {
+        "LedDisplayDeviceLibrary": "1.0.0-*"
+    },
+
+    "commands": {
+        "DeviceTestClient": "DeviceTestClient"
+    },
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}

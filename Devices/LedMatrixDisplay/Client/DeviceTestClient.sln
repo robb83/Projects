@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DeviceTestClient", "DeviceTestClient\DeviceTestClient.xproj", "{ABB83106-63DA-4DFC-A672-9773E8D75001}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LedDisplayDeviceLibrary", "LedDisplayDeviceLibrary\LedDisplayDeviceLibrary.xproj", "{A3486118-9266-408D-A2E7-E2BAA1D516D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABB83106-63DA-4DFC-A672-9773E8D75001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB83106-63DA-4DFC-A672-9773E8D75001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB83106-63DA-4DFC-A672-9773E8D75001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB83106-63DA-4DFC-A672-9773E8D75001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3486118-9266-408D-A2E7-E2BAA1D516D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3486118-9266-408D-A2E7-E2BAA1D516D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3486118-9266-408D-A2E7-E2BAA1D516D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3486118-9266-408D-A2E7-E2BAA1D516D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

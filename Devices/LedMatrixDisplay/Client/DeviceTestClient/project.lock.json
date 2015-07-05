@@ -1,0 +1,14 @@
+{
+  "locked": false,
+  "version": -9996,
+  "targets": {
+    "DNX,Version=v4.5.1": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "": [
+      "LedDisplayDeviceLibrary >= 1.0.0-*"
+    ],
+    "DNX,Version=v4.5.1": []
+  }
+}
