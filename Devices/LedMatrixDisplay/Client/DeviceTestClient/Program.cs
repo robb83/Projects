@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,19 +15,127 @@ namespace DeviceTestClient
         {
             using(LedDisplay display = new LedDisplay("COM3", 250000))
             {
-                display.DisplayImage((Bitmap)Image.FromFile(@"letter2.bmp"), true);
+                display.Clear();
+                HappyHoliday(display);
+            }
+        }
 
-                Thread.Sleep(3000);
+        public void HappyHoliday(LedDisplay display)
+        {
+            while (true)
+            {
+                for (int a = 0; a < 2; ++a)
+                {
+                    PrintText(display, "Kellemes ünnepeket!", 50, 4, false);
+                    PrintText(display, "    ", 50, 4, false);
+                }
 
-                display.Test();
+                Snow(display, 100000000 /* 10 sec */);
+            }
+        }
 
-                Thread.Sleep(1000);
+        public void Test(LedDisplay display)
+        {
+            display.DisplayImage((Bitmap)Image.FromFile(@"letter2.bmp"), true);
 
-                Translation(display, (Bitmap)Image.FromFile(@"letter2.bmp"));
+            Thread.Sleep(3000);
 
-                Rotate(display, (Bitmap)Image.FromFile(@"letter.bmp"));
+            display.Test();
 
-                Scale(display, (Bitmap)Image.FromFile(@"letter.bmp"));
+            Thread.Sleep(1000);
+
+            Translation(display, (Bitmap)Image.FromFile(@"letter2.bmp"));
+
+            Rotate(display, (Bitmap)Image.FromFile(@"letter.bmp"));
+
+            Scale(display, (Bitmap)Image.FromFile(@"letter.bmp"));
+        }
+
+        public void Snow(LedDisplay display, long timeout)
+        {
+            Random r = new Random();
+            long start = DateTime.Now.Ticks;
+
+            while (true)
+            {
+                uint line = 0x00;
+
+                for(int a = 0; a < 32; ++a)
+                {
+                    line = (uint)(line << 1) | (uint)(r.Next(100) < 5 ? (uint)1 : (uint)0);
+                }
+
+                display.ShiftDown(line);
+
+                if (DateTime.Now.Ticks - start < timeout)
+                {
+                    Thread.Sleep(100);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int a = 0; a < 16; ++a)
+            {
+                display.ShiftDown(0x00);
+                Thread.Sleep(100);
+            }
+        }
+
+        public void PrintText(LedDisplay display, String text, int speed, int offset, bool underline)
+        {
+            ushort lastColumnPattern = 0x00;
+            ushort underlinePattern = 0x00;
+
+            if (offset > 0)
+            {
+                underlinePattern = (ushort)(0x01 << (offset - 1));
+            }
+
+            for (int i = 0; i < text.Length; ++i)
+            {
+                char ch = text[i];
+                Boolean whitespace = Char.IsWhiteSpace(ch);
+
+                byte[] pattern = DefaultDisplayFont.GetCharacterBitmap(ch);
+
+                for (int b = 0; b < 8; ++b)
+                {
+                    ushort c = (ushort)(pattern[b] << offset);
+
+                    // Kerning?
+                    if (!whitespace)
+                    {
+                        if (c == 0x00 && lastColumnPattern == 0x00) continue;
+                        lastColumnPattern = c;
+                    }
+                    
+                    if (underline)
+                    {
+                        c |= underlinePattern;
+                    }
+
+                    display.ShiftLeft(c);
+
+                    Thread.Sleep(speed);
+                }
+
+                // space between characters
+                if (lastColumnPattern != 0x00)
+                {
+                    if (underline)
+                    {
+                        display.ShiftLeft(underlinePattern);
+                    }
+                    else
+                    {
+                        display.ShiftLeft(0x0000);
+                    }
+
+                    Thread.Sleep(speed);
+                }
             }
         }
 

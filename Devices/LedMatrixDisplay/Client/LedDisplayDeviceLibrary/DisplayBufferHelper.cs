@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 namespace LedDisplayDeviceLibrary
 {
     public static class DisplayBufferHelper
-    {
+    {                
         public static void Clear(byte[] buffer)
         {
             for (int i = 0; i < buffer.Length; ++i)
