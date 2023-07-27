@@ -14,3 +14,9 @@ gradle
 build
 original_media
 *.user
+*.obj
+*.exe
+*.dll
+*.lib
+*.exp
+*.dblite

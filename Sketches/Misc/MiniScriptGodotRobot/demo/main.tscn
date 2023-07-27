@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://c31i3nxndwu1"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_2u74r"]
+[ext_resource type="Texture2D" uid="uid://d2a38f682ijyb" path="res://icon.svg" id="1_kto6j"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_2u74r")
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(300, 300)
+
+[node name="GDExample" type="GDExample" parent="Node2D"]
+texture = ExtResource("1_kto6j")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 757.0
+offset_top = 1.0
+offset_right = 1148.0
+offset_bottom = 649.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CodeEdit" type="CodeEdit" parent="Control/VBoxContainer"]
+custom_minimum_size = Vector2(0, 600)
+layout_mode = 2
+text = "while true
+	for i in range(1, 4)
+		for j in range(1, 10)
+			forward()
+		end for
+		turnRight()
+	end for
+end while"
+
+[node name="Button" type="Button" parent="Control/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Run"
+
+[connection signal="pressed" from="Control/VBoxContainer/Button" to="." method="_on_button_pressed"]
