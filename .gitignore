@@ -20,3 +20,4 @@ original_media
 *.lib
 *.exp
 *.dblite
+!*.gdextension

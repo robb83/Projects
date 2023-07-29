@@ -2,3 +2,7 @@
 	path = Sketches/Misc/MiniScriptGodotRobot/godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.1
+[submodule "Sketches/Misc/GodotCustomControls/godot-cpp"]
+	path = Sketches/Misc/GodotCustomControls/godot-cpp
+	url = https://github.com/godotengine/godot-cpp
+	branch = 4.1

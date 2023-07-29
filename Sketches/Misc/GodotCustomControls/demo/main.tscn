@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dq6m3cgfq0b6"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SimpleTextControl" type="SimpleTextControl" parent="Control"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 58.0
+offset_right = 400.0
+offset_bottom = 428.0
