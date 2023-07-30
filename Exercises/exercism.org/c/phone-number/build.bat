@@ -1,0 +1,1 @@
+clang.exe -std=c99 -fcolor-diagnostics -fansi-escape-codes -g test-framework\unity.c *.c -o output/main.exe
