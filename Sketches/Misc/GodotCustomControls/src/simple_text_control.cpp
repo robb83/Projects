@@ -85,18 +85,22 @@ void SimpleTextControl::copy() {
     DisplayServer::get_singleton()->clipboard_set(result);
 }
 
-Vector2i SimpleTextControl::get_row_column(Vector2i mpos) {
+Vector4i SimpleTextControl::get_row_column(Vector2i mpos) {
     auto font = get_theme_default_font();
     auto offset = (int)(((v_scroll->get_value() * font->get_height()) + mpos.y) / font->get_height());
     double margin = 5;    
 
     int selected_char = 0;
+    int selected_paragraph = 0;
+    int selected_paragraph_lc = 0;
     for (int p = 0, lc = 0; p < paragraphs.size(); ++p) {
         int c = paragraphs[p].tp->get_line_count();
         lc += c;
         if (lc > offset) {
             int x = c - (lc - offset);
             selected_char = TS->shaped_text_hit_test_position(paragraphs[p].tp->get_line_rid(x), mpos.x - margin);
+            selected_paragraph = p;
+            selected_paragraph_lc = x;
             break;
         }
     }
@@ -107,7 +111,7 @@ Vector2i SimpleTextControl::get_row_column(Vector2i mpos) {
         total_line_count += paragraphs[p].tp->get_line_count();
     }
 
-    return Vector2i(CLAMP(offset, 0, total_line_count - 1), selected_char);
+    return Vector4i(CLAMP(offset, 0, total_line_count - 1), selected_char, selected_paragraph, selected_paragraph_lc);
 }
 
 Size2 SimpleTextControl::_get_minimum_size() const {
@@ -139,17 +143,36 @@ void SimpleTextControl::_gui_input(const Ref<InputEvent> &p_event) {
 				}
 			}
 
-            if (mb->get_button_index() == MouseButton::MOUSE_BUTTON_LEFT) {
-                Vector2i mpos = mb->get_position();
-                selection_start = get_row_column(mpos);
-                selection_end = selection_start;
-                queue_redraw();
+            if (mb->get_button_index() == MouseButton::MOUSE_BUTTON_LEFT) {                
+                if (mb->is_double_click())
+                {
+                    Vector2i mpos = mb->get_position();
+                    auto info = get_row_column(mpos);
+                    selection_start = Vector2(info.x, info.y);
+                    selection_end = selection_start;
+
+                    auto words = TS->shaped_text_get_word_breaks(paragraphs[info.z].tp->get_line_rid(info.w));
+                    for (int i = 0; i < words.size(); i = i + 2) {
+                        if ((words[i] < info.y && words[i + 1] > info.y) || (i == words.size() - 2 && info.y == words[i + 1])) {
+                            selection_start.y = words[i];
+                            selection_end.y = words[i + 1];
+                            break;
+                        }
+	                }
+                    queue_redraw();
+
+                } else {
+                    Vector2i mpos = mb->get_position();
+                    auto info = get_row_column(mpos);
+                    selection_start = Vector2(info.x, info.y);
+                    selection_end = selection_start;
+                    queue_redraw();
+                }
             }
 
             if (mb->get_button_index() == MouseButton::MOUSE_BUTTON_MIDDLE) {
                 add_paragraph();
             }
-
         }
     }
 
@@ -158,7 +181,8 @@ void SimpleTextControl::_gui_input(const Ref<InputEvent> &p_event) {
         
         if (mm->get_button_mask().has_flag(MouseButtonMask::MOUSE_BUTTON_MASK_LEFT)) {            
             Vector2i mpos = mm->get_position();
-            selection_end = get_row_column(mpos);
+            auto info = get_row_column(mpos);
+            selection_end = Vector2(info.x, info.y);
             queue_redraw();
         }
 

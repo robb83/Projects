@@ -38,7 +38,7 @@ private:
     void copy();
     void update_scrolls();
     void add_paragraph();
-    Vector2i get_row_column(Vector2i pos);
+    Vector4i get_row_column(Vector2i pos);
 
 protected:
     static void _bind_methods();
