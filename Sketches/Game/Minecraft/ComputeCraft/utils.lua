@@ -14,3 +14,9 @@ contains = function(list, value)
     end
     return false
 end
+
+appendF = function(filename, obj)
+    local file = fs.open(filename, "a")
+    file.write(textutils.serialise(obj))
+    file.close()
+end

@@ -3,6 +3,7 @@ function createBot()
     o.pos = vector.new(0, 0, 0)
     o.dir = 0
     o.fuels = { "minecraft:stick", "minecraft:charcoal", "minecraft:coal" }
+    o.autoFuel = true
     
     local directions = {}
     directions[0] = vector.new(0, 0, -1)
@@ -13,6 +14,7 @@ function createBot()
     local fuelConsumptionType = 0
     
     o.forward = function()
+        if o.autoFuel and turtle.getFuelLevel() == 0 then o.refuel() end
     	if turtle.forward() then
     		o.pos = o.pos + directions[o.dir]
     		return true
@@ -21,8 +23,27 @@ function createBot()
     end
     
     o.back = function()
+        if o.autoFuel and turtle.getFuelLevel() == 0 then o.refuel() end
     	if turtle.back() then
     		o.pos = o.pos + directions[((o.dir - 2) % 4)]
+    		return true
+    	end
+    	return false
+    end
+    
+    o.up = function()
+        if o.autoFuel and turtle.getFuelLevel() == 0 then o.refuel() end
+    	if turtle.up() then
+    	    o.pos = o.pos + vector.new(0, 1, 0)
+    		return true
+    	end
+    	return false
+    end
+    
+    o.down = function()
+        if o.autoFuel and turtle.getFuelLevel() == 0 then o.refuel() end
+    	if turtle.down() then
+    	    o.pos = o.pos + vector.new(0, -1, 0)
     		return true
     	end
     	return false
@@ -42,22 +63,6 @@ function createBot()
             return true
         end
         return false
-    end
-    
-    o.up = function()
-    	if turtle.up() then
-    	    o.pos = o.pos + vector.new(0, 1, 0)
-    		return true
-    	end
-    	return false
-    end
-    
-    o.down = function()
-    	if turtle.down() then
-    	    o.pos = o.pos + vector.new(0, -1, 0)
-    		return true
-    	end
-    	return false
     end
 
     o.headingTo =  function(headingTo)
@@ -174,6 +179,44 @@ function createBot()
 
     o.print = function()
         print(o.pos, o.dir)
+    end
+
+    o.hasItem = function(name)
+        for n = 1, 16 do
+            if turtle.getItemCount(n) > 0 then
+                local detail = turtle.getItemDetail(n)
+                if detail.name == name then
+                    return true
+                end
+            end
+        end
+        return false
+    end
+
+    o.getItem = function(name)
+        for n = 1, 16 do
+            if turtle.getItemCount(n) > 0 then
+                local detail = turtle.getItemDetail(n)
+                if detail.name == name then
+                    return detail
+                end
+            end
+        end
+        return nil
+    end
+
+    o.placeItem = function(name)
+        for n = 1, 16 do
+            if turtle.getItemCount(n) > 0 then
+                local detail = turtle.getItemDetail(n)
+                if detail.name == name then
+                    turtle.select(n)
+                    local a, b = turtle.place()
+                    return a
+                end
+            end
+        end
+        return false
     end
 
     return o

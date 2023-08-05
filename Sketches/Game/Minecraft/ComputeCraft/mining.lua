@@ -50,9 +50,7 @@ local printall = function()
 
     for n = 1, #detected do
         if not hash_has(knowBlocks, detected[n].name) then
-            local file = fs.open("miner.txt", "a")
-            file.write(textutils.serialise(detected[n]))
-            file.close()
+            appendF("miner.txt", detected[n])
             hash_set(knowBlocks, detected[n].name)
         end
     end
@@ -86,7 +84,6 @@ local fw = function(x)
             turtle.dig()
         end
 
-        bot.refuel()
         bot.forward()
         road()
 
@@ -98,7 +95,6 @@ end
 
 local bw = function(x)
     for n = 1, x do
-        bot.refuel()
         bot.back()
     end
 end
