@@ -77,5 +77,5 @@ while true do
 
     bot.refuel()
     bot.forward()
-    sleep(120)
+    sleep(300)
 end
