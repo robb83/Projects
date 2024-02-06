@@ -1,23 +1,28 @@
 extends Node2D
 
 @onready var spaceship = $"../Spaceship"
-var rombus : PackedVector2Array = [
-	Vector2(0, -20),
-	Vector2(15, 0),
-	Vector2(0, 20),
-	Vector2(-15, 0)
-]
+var current_velocity_symbol : PackedVector2Array = []
+var autopilot_velocity_symbol : PackedVector2Array = []
 
 var autopilot_direction:float
+var autopilot_velocity:float
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	current_velocity_symbol = gen_polygon(4, 15)
+	autopilot_velocity_symbol = gen_polygon(8, 18)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	position = spaceship.position
 	queue_redraw()
+
+func gen_polygon(count, scale):
+	var result : PackedVector2Array = []
+	var step = 2 * PI / count
+	for n in count:
+		result.push_back(Vector2(0, 1).rotated(step * n) * scale)
+	return result
 
 func draw_polygon_lines(points, color, closed = true, offset = Vector2()):
 	for n in range(1, points.size()):
@@ -33,6 +38,11 @@ func _draw():
 	draw_line(Vector2(130, 0).rotated(autopilot_direction), Vector2(150, 0).rotated(autopilot_direction), Color.DARK_GREEN, 3)
 	
 	# liear movement
-	var linear_velocity = spaceship.linear_velocity
-	draw_line(Vector2(), linear_velocity, Color.GREEN)
-	draw_polygon_lines(rombus, Color.GREEN, true, linear_velocity)
+	var lv = spaceship.linear_velocity
+	draw_line(Vector2(), lv, Color.GREEN)
+	draw_polygon_lines(current_velocity_symbol, Color.GREEN, true, lv)
+	
+	# autopilot movement
+	var av = Vector2(1, 0).rotated(autopilot_direction) * autopilot_velocity
+	draw_line(Vector2(), av, Color.GREEN)
+	draw_polygon_lines(autopilot_velocity_symbol, Color.GREEN, true, av)

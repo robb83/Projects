@@ -20,6 +20,11 @@ var ship_height = 24
 var thruster_locations = []
 var thruster_directions = []
 
+func heading_diff(current, desired):
+	var x = (current + 2 * PI if current < desired else current) - desired
+	x = x - 2 * PI if x > PI else x 
+	return x
+
 func ship_apply_thruster(index, scale = 1.0):
 	var force = thruster_directions[index].rotated(spaceship.global_rotation) * scale
 	var offset = thruster_locations[index].rotated(spaceship.global_rotation)
@@ -39,16 +44,31 @@ func ship_stabilization():
 	
 	if spaceship.linear_velocity.length() > 0:
 		for n in 8:
-			var force = thruster_directions[n].rotated(spaceship.global_rotation) * scale
+			var force = thruster_directions[n].rotated(spaceship.global_rotation)
 			if spaceship.linear_velocity.dot(force) < 0:
 				ship_apply_thruster(n, 1)
-				
+
 func ship_autopilot():
 	if not autopilot_enabled:
 		return
 	
-	var error = autopilot_desired_orientation - spaceship.global_rotation
-	# TODO
+	var rdiff = -heading_diff(spaceship.global_rotation, autopilot_desired_orientation)
+	var rerror = rdiff - spaceship.angular_velocity
+	if abs(rerror) > 0.001:
+		for n in 8:
+			var torque = thruster_directions[n].cross(thruster_locations[n])
+			if rerror > 0 and torque < 0:
+				ship_apply_thruster(n, 0.25)
+			elif rerror < 0 and torque > 0:
+				ship_apply_thruster(n, 0.25)
+	
+	var desired_vector = Vector2(1, 0).rotated(autopilot_desired_orientation) * autopilot_desired_velocity
+	var verror = desired_vector - spaceship.linear_velocity
+	if verror.length() > 0.1:
+		for n in 8:
+			var force = thruster_directions[n].rotated(spaceship.global_rotation)
+			if verror.dot(force) > 0:
+				ship_apply_thruster(n, 1)
 		
 func ship_display_ui():
 	label_orientation.text = "Orientation: %d" % spaceship.global_rotation_degrees
@@ -90,8 +110,10 @@ func _process(delta):
 
 	if Input.is_action_pressed("ui_up"):
 		autopilot_desired_velocity += 1
+		autopilot_desired_velocity = 0 if autopilot_desired_velocity < 0 else autopilot_desired_velocity
 	if Input.is_action_pressed("ui_down"):
 		autopilot_desired_velocity -= 1
+		autopilot_desired_velocity = 0 if autopilot_desired_velocity < 0 else autopilot_desired_velocity
 	if Input.is_action_pressed("ui_left"):
 		autopilot_desired_orientation = wrap(autopilot_desired_orientation - 0.01, -PI, PI)
 	if Input.is_action_pressed("ui_right"):
@@ -151,6 +173,7 @@ func _process(delta):
 		autopilot_enabled = false
 	
 	indicators.autopilot_direction = autopilot_desired_orientation
+	indicators.autopilot_velocity = autopilot_desired_velocity
 	ship_stabilization()
 	ship_autopilot()
 	ship_display_ui()
