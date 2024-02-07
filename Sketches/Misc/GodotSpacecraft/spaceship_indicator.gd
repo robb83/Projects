@@ -44,5 +44,5 @@ func _draw():
 	
 	# autopilot movement
 	var av = Vector2(1, 0).rotated(autopilot_direction) * autopilot_velocity
-	draw_line(Vector2(), av, Color.GREEN)
+	draw_line(lv, av, Color.GREEN)
 	draw_polygon_lines(autopilot_velocity_symbol, Color.GREEN, true, av)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://qu5u4m4m2ecw"]
+[gd_scene load_steps=9 format=3 uid="uid://qu5u4m4m2ecw"]
 
 [ext_resource type="Script" path="res://Controller.gd" id="1_bv3x3"]
 [ext_resource type="Texture2D" uid="uid://1erofu3bejrv" path="res://background-starfield-generator.png" id="2_scvfm"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cxjio4vrqymom" path="res://background-starfield-generator_2.png" id="3_kjhhp"]
 [ext_resource type="Script" path="res://spaceship_indicator.gd" id="5_28ovd"]
 [ext_resource type="Texture2D" uid="uid://boo612gbwalum" path="res://spaceship.png" id="5_bcegc"]
+[ext_resource type="Texture2D" uid="uid://dvdqj8r1jo8h8" path="res://thruster_indicator.png" id="6_iqjed"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q4hlg"]
 size = Vector2(64, 24)
@@ -56,6 +57,52 @@ shape = SubResource("RectangleShape2D_q4hlg")
 [node name="Sprite2D" type="Sprite2D" parent="Spaceship"]
 texture = ExtResource("5_bcegc")
 
+[node name="ThrusterIndicator0" type="Sprite2D" parent="Spaceship"]
+visible = false
+position = Vector2(32, -16)
+rotation = -1.5708
+texture = ExtResource("6_iqjed")
+
+[node name="ThrusterIndicator1" type="Sprite2D" parent="Spaceship"]
+visible = false
+position = Vector2(36, -12)
+texture = ExtResource("6_iqjed")
+
+[node name="ThrusterIndicator2" type="Sprite2D" parent="Spaceship"]
+visible = false
+position = Vector2(36, 12)
+texture = ExtResource("6_iqjed")
+
+[node name="ThrusterIndicator3" type="Sprite2D" parent="Spaceship"]
+visible = false
+position = Vector2(32, 16)
+rotation = 1.5708
+texture = ExtResource("6_iqjed")
+
+[node name="ThrusterIndicator4" type="Sprite2D" parent="Spaceship"]
+visible = false
+position = Vector2(-32, 16)
+rotation = 1.5708
+texture = ExtResource("6_iqjed")
+
+[node name="ThrusterIndicator5" type="Sprite2D" parent="Spaceship"]
+visible = false
+position = Vector2(-36, 12)
+rotation = 3.14159
+texture = ExtResource("6_iqjed")
+
+[node name="ThrusterIndicator6" type="Sprite2D" parent="Spaceship"]
+visible = false
+position = Vector2(-36, -12)
+rotation = 3.14159
+texture = ExtResource("6_iqjed")
+
+[node name="ThrusterIndicator7" type="Sprite2D" parent="Spaceship"]
+visible = false
+position = Vector2(-32, -16)
+rotation = -1.5708
+texture = ExtResource("6_iqjed")
+
 [node name="Indicators" type="Node2D" parent="."]
 position = Vector2(544, 278)
 script = ExtResource("5_28ovd")
@@ -86,7 +133,7 @@ offset_bottom = 644.0
 
 [node name="Label" type="Label" parent="CanvasLayer/Stabilization"]
 layout_mode = 2
-text = "Stabilization:"
+text = "Autopilot:"
 
 [node name="VelocityLabel" type="Label" parent="CanvasLayer/Stabilization"]
 layout_mode = 2
