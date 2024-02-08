@@ -9,6 +9,8 @@ var current_block : PackedScene = null
 var current_instance = null
 var current_attached = false
 var current_anchor = 0
+var current_attached_from = null
+var current_attached_to = null
 
 func place_cancel():
 	if current_instance:
@@ -18,6 +20,8 @@ func place_cancel():
 	current_instance = null
 	current_attached = false
 	current_anchor = 0
+	current_attached_from = null
+	current_attached_to = null
 	
 func place_module():
 	if current_instance:
@@ -28,6 +32,8 @@ func place_module():
 	current_instance.visible = false
 	current_attached = false
 	current_anchor = 0
+	current_attached_from = null
+	current_attached_to = null
 	add_child(current_instance)
 	
 func change_module(n):
@@ -42,12 +48,15 @@ func change_module(n):
 		current_instance.visible = false
 		current_attached = false
 		current_anchor = 0
+		current_attached_from = null
+		current_attached_to = null
 		add_child(current_instance)
 	else:
 		current_block = null
 		current_instance = null
 		current_attached = false
 		current_anchor = 0
+		current_attached_to = null
 		
 func mouse_pick():
 	var mpos = get_viewport().get_mouse_position()
@@ -102,6 +111,14 @@ func _process(delta):
 		var anchors = get_achors(current_instance)
 		current_anchor = (current_anchor + 1) % len(anchors)
 		print(current_anchor)
+		
+	if Input.is_action_just_pressed("char_c") and current_attached:
+		var a1 = (current_attached_from.global_position - current_instance.global_position)
+		current_instance.rotate(a1, PI / 2)
+		
+	if Input.is_action_just_pressed("char_v"):
+		var a1 = (current_attached_from.global_position - current_instance.global_position)
+		current_instance.rotate(a1, -PI / 2)
 	
 	if Input.is_action_just_pressed("click_left") and current_attached:
 		place_module()
@@ -114,14 +131,19 @@ func _process(delta):
 			var length = ( result.global_position - module.global_position).length()
 			var anchors = get_achors(current_instance)
 			if len(anchors) > 0:
-				print(current_anchor)
 				var anchor = anchors[current_anchor]
 				var position = anchor.position
 				current_instance.global_position = module.global_position + direction * ( length + anchor.position.length() )
-				current_instance.look_at(result.global_position, Vector3.UP)
-				current_instance.look_at(result.global_position, Vector3.FORWARD)
+				
+				var a1 = (anchor.global_position - current_instance.global_position)
+				var a2 = (module.global_position - result.global_position)
+				var r = a1.cross(a2).normalized()
+				var a = a1.angle_to(a2)
+				current_instance.rotate(r, a)
 				current_instance.visible = true
 				current_attached = true
+				current_attached_to = result
+				current_attached_from = anchor
 
 func get_achors(node):
 	var open = [ node ]
