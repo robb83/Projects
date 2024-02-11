@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckpwlusysn26y"]
+
+[ext_resource type="Script" path="res://modules/module.gd" id="1_5yl2p"]
+[ext_resource type="Script" path="res://addons/snap_to_surface/module_anchor.gd" id="2_wswvm"]
+
+[node name="ModuleRectangleOmni" type="Node3D"]
+script = ExtResource("1_5yl2p")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00220251, 0, 0.00353855)
+
+[node name="CSGBox3D0" type="CSGBox3D" parent="CSGCombiner3D"]
+
+[node name="CSGBox3D1" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -0.5, 0, 0.5)
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -0.5, 0, -0.5)
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0.5, 0, -0.5)
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0.5, 0, 0.5)
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="@Area3D@24303" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
+transform = Transform3D(0.707107, -6.98312e-08, 0.707107, -6.98312e-08, 1, 1.68587e-07, -0.707107, -1.68587e-07, 0.707107, 0.676777, 0, 0.676777)
+script = ExtResource("2_wswvm")
+
+[node name="@Area3D@24305" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 0.676777, 0, -0.676777)
+script = ExtResource("2_wswvm")
+
+[node name="@Area3D@24307" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
+transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, -0.676777, 0, -0.676777)
+script = ExtResource("2_wswvm")
+
+[node name="@Area3D@24309" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
+transform = Transform3D(0.707107, 6.98312e-08, -0.707107, 6.98312e-08, 1, 1.68587e-07, 0.707107, -1.68587e-07, 0.707107, -0.676777, 0, 0.676777)
+script = ExtResource("2_wswvm")
+
+[node name="@Area3D@24311" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
+transform = Transform3D(0.707107, 6.98312e-08, -0.707107, 6.98312e-08, 1, 1.68587e-07, 0.707107, -1.68587e-07, 0.707107, -0.676777, 0, 0.676777)
+script = ExtResource("2_wswvm")

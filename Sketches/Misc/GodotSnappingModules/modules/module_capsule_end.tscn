@@ -1,9 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://wf5um85trt2v"]
 
 [ext_resource type="Script" path="res://modules/module.gd" id="1_csrmj"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_4urrn"]
-radius = 0.25
+[ext_resource type="Script" path="res://addons/snap_to_surface/module_anchor.gd" id="2_d7aij"]
 
 [node name="ModuleRectangleOmni" type="Node3D"]
 script = ExtResource("1_csrmj")
@@ -19,8 +17,6 @@ sides = 12
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.25)
 size = Vector3(0.5, 0.5, 0.5)
 
-[node name="Area3D1" type="Area3D" parent="." groups=["anchor"]]
+[node name="@Area3D@26834" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.5)
-
-[node name="CollisionShape3D1" type="CollisionShape3D" parent="Area3D1"]
-shape = SubResource("SphereShape3D_4urrn")
+script = ExtResource("2_d7aij")

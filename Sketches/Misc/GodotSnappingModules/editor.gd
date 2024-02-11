@@ -5,6 +5,7 @@ const RAY_LENGTH = 100.0
 @onready var camera3d = $Camera3D
 
 var modules = []
+var current_module = -1
 var current_block : PackedScene = null
 var current_instance = null
 var current_attached = false
@@ -42,6 +43,7 @@ func change_module(n):
 		current_instance.queue_free()
 		
 	if n > -1 and n < len(modules):
+		current_module = n
 		current_block = modules[n]
 		current_instance = current_block.instantiate()
 		current_instance.set_transparency(0.5)
@@ -57,6 +59,7 @@ func change_module(n):
 		current_attached = false
 		current_anchor = 0
 		current_attached_to = null
+		current_module = -1
 		
 func mouse_pick():
 	var mpos = get_viewport().get_mouse_position()
@@ -74,76 +77,94 @@ func mouse_pick():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	modules.push_back(preload("res://modules/module_rectangle_one_one.tscn"))
+	modules.push_back(preload("res://modules/module_rectangle_one_two.tscn"))
+	modules.push_back(preload("res://modules/module_rectangle_one.tscn"))
 	modules.push_back(preload("res://modules/module_rectangle_omni.tscn"))
 	modules.push_back(preload("res://modules/module_rectangle_long_two.tscn"))
 	modules.push_back(preload("res://modules/module_rectangle_long_two_half.tscn"))
 	modules.push_back(preload("res://modules/module_capsule_end.tscn"))
-	modules.push_back(preload("res://modules/module_rectangle_special.tscn"))
+	modules.push_back(preload("res://modules/module_rectangle_special_1.tscn"))
+	modules.push_back(preload("res://modules/module_rectangle_special_2.tscn"))
+	modules.push_back(preload("res://modules/module_rectangle_special_3.tscn"))
 	change_module(0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	
-	if Input.is_action_just_pressed("num_0"):
-		change_module(0)
+	if Input.is_action_just_pressed("module_down"):
+		change_module((len(modules) + current_module - 1) % len(modules))
 	
-	if Input.is_action_just_pressed("num_1"):
-		change_module(1)
-	
-	if Input.is_action_just_pressed("num_2"):
-		change_module(2)
+	if Input.is_action_just_pressed("module_up"):
+		change_module((current_module + 1) % len(modules))
 		
-	if Input.is_action_just_pressed("num_3"):
-		change_module(3)
-	
-	if Input.is_action_just_pressed("num_4"):
-		change_module(4)
+	if Input.is_action_just_pressed("rotate_down") and current_attached:
+		var a1 = (current_attached_from.global_position - current_instance.global_position)
+		current_instance.rotate(a1, PI / 2)
 		
-	if Input.is_action_just_pressed("cancel"):
-		place_cancel()
+	if Input.is_action_just_pressed("rotate_up"):
+		var a1 = (current_attached_from.global_position - current_instance.global_position)
+		current_instance.rotate(a1, -PI / 2)
 		
-	if Input.is_action_just_pressed("char_a"):
+	if Input.is_action_just_pressed("anchor_down"):
 		var anchors = get_achors(current_instance)
 		current_anchor = (len(anchors) + (current_anchor - 1)) % len(anchors)
 		print(current_anchor)
 		
-	if Input.is_action_just_pressed("char_d"):
+	if Input.is_action_just_pressed("anchor_up"):
 		var anchors = get_achors(current_instance)
 		current_anchor = (current_anchor + 1) % len(anchors)
 		print(current_anchor)
 		
-	if Input.is_action_just_pressed("char_c") and current_attached:
-		var a1 = (current_attached_from.global_position - current_instance.global_position)
-		current_instance.rotate(a1, PI / 2)
-		
-	if Input.is_action_just_pressed("char_v"):
-		var a1 = (current_attached_from.global_position - current_instance.global_position)
-		current_instance.rotate(a1, -PI / 2)
+	if Input.is_action_just_pressed("cancel"):
+		place_cancel()
 	
-	if Input.is_action_just_pressed("click_left") and current_attached:
+	if Input.is_action_just_pressed("confirm") and current_attached:
 		place_module()
 		
 	if current_instance:
-		var result = mouse_pick()
-		if result:
-			var module = result.get_parent()
-			var direction = ( result.global_position - module.global_position).normalized()
-			var length = ( result.global_position - module.global_position).length()
-			var anchors = get_achors(current_instance)
-			if len(anchors) > 0:
-				var anchor = anchors[current_anchor]
-				var position = anchor.position
-				current_instance.global_position = module.global_position + direction * ( length + anchor.position.length() )
+		var result = current_attached_to
+		
+		var picked = mouse_pick()
+		if picked:
+			result = picked
+		
+		var module = null
+		if result != null:
+			module = result.get_parent()
+		else:
+			return
+			
+		var anchors = get_achors(current_instance)
+		if len(anchors) > 0 and anchors[current_anchor].get_parent() != module and (anchors[current_anchor] != current_attached_from or current_attached_to != result):
+			var anchor = anchors[current_anchor]
+			current_instance.global_position = Vector3()
+			current_instance.global_rotation = Vector3()
+			
+			var a1 = null
+			var a2 = null
+			var rv = null
+			var ra = null
+			var q = null
+
+			#### I don't get it, but works!
+			a1 = -result.global_transform.basis.z
+			a2 = anchor.global_transform.basis.z
+			rv = a1.cross(a2).normalized()
+			ra = a2.angle_to(a1)
+			if rv.length() != 0:
+				q = Quaternion(rv, -ra)
+				current_instance.quaternion = current_instance.quaternion * q
+			else:
+				q = Quaternion(anchor.global_transform.basis.y, ra)
+				current_instance.quaternion = current_instance.quaternion * q
 				
-				var a1 = (anchor.global_position - current_instance.global_position)
-				var a2 = (module.global_position - result.global_position)
-				var r = a1.cross(a2).normalized()
-				var a = a1.angle_to(a2)
-				current_instance.rotate(r, a)
-				current_instance.visible = true
-				current_attached = true
-				current_attached_to = result
-				current_attached_from = anchor
+			current_instance.global_position = module.global_position + (result.global_position - module.global_position) - (anchor.global_position - current_instance.global_position)
+			
+			current_instance.visible = true
+			current_attached = true
+			current_attached_to = result
+			current_attached_from = anchor
 
 func get_achors(node):
 	var open = [ node ]

@@ -10,3 +10,4 @@ func _ready():
 	
 	add_to_group("anchor", true)
 	add_child(cshape)
+	cshape.owner = self

@@ -4,20 +4,23 @@ func _get_gizmo_name():
 	return "Area3D Orientation"
 
 func _init():
-	create_material("main", Color(1, 1,0))
+	create_material("front", Color(0, 0, 1))
+	create_material("left", Color(1, 0, 0))
 
 func _has_gizmo(node):
 	return node is Area3D
+	return false
 
 func _redraw(gizmo):
 	gizmo.clear()
-
-	var node3d = gizmo.get_node_3d()
-	print(node3d)
-	print(node3d.global_position)
-	print(node3d.global_position)
-	var lines = PackedVector3Array()
-	lines.push_back(Vector3())
-	lines.push_back( node3d.quaternion * Vector3.MODEL_FRONT)
 	
-	gizmo.add_lines(lines, get_material("main", gizmo), false)
+	var front = PackedVector3Array()
+	front.push_back(Vector3())
+	front.push_back(Vector3.MODEL_FRONT * 0.5)
+	
+	var left = PackedVector3Array()
+	left.push_back(Vector3())
+	left.push_back(Vector3.MODEL_LEFT * 0.5)
+	
+	gizmo.add_lines(front, get_material("front", gizmo), false)
+	gizmo.add_lines(left, get_material("left", gizmo), false)

@@ -5,14 +5,14 @@ extends EditorPlugin
 # https://github.com/remorse107/vertexsnap/blob/master/addons/vertexsnap/plugin.gd
 # https://forums.unrealengine.com/t/rotation-from-normal/11543/3
 
-const Anchor = preload("res://addons/snap_to_surface/anchor.gd")
+const ModuleAnchor = preload("res://addons/snap_to_surface/module_anchor.gd")
 const MyCustomGizmoPlugin = preload("res://addons/snap_to_surface/gizmo_area3d_orientation.gd")
 
 var gizmo_plugin = MyCustomGizmoPlugin.new()
 var selected_object = null
 	
 func add_anchor(node, gp, n):
-	var anchor = Anchor.new()
+	var anchor = ModuleAnchor.new()
 	node.add_child(anchor)
 	anchor.owner = node.owner
 	anchor.global_position = gp
@@ -92,7 +92,7 @@ func _edit(object):
 func _enter_tree():
 	# Initialization of the plugin goes here.
 	add_node_3d_gizmo_plugin(gizmo_plugin)
-	add_custom_type("Modul Anchor", "Area3D", Anchor, null)
+	add_custom_type("Modul Anchor", "Area3D", ModuleAnchor, null)
 	
 func _exit_tree():
 	# Clean-up of the plugin goes here.

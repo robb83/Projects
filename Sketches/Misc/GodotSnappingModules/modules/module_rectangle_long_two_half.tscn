@@ -1,9 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c8qiioe32o5ai"]
 
 [ext_resource type="Script" path="res://modules/module.gd" id="1_f5e2v"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_4urrn"]
-radius = 0.25
+[ext_resource type="Script" path="res://addons/snap_to_surface/module_anchor.gd" id="2_cyv6g"]
 
 [node name="ModuleRectangleOmni" type="Node3D"]
 script = ExtResource("1_f5e2v")
@@ -21,14 +19,10 @@ size = Vector3(0.5, 0.5, 0.5)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0, 0)
 size = Vector3(0.5, 0.5, 0.5)
 
-[node name="Area3D1" type="Area3D" parent="." groups=["anchor"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+[node name="@Area3D@23427" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1, 0, 0)
+script = ExtResource("2_cyv6g")
 
-[node name="CollisionShape3D1" type="CollisionShape3D" parent="Area3D1"]
-shape = SubResource("SphereShape3D_4urrn")
-
-[node name="Area3D2" type="Area3D" parent="." groups=["anchor"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Area3D2"]
-shape = SubResource("SphereShape3D_4urrn")
+[node name="_Area3D_23429" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1, 0, 0)
+script = ExtResource("2_cyv6g")
