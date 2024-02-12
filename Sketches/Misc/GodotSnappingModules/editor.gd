@@ -141,24 +141,15 @@ func _process(delta):
 			current_instance.global_position = Vector3()
 			current_instance.global_rotation = Vector3()
 			
-			var a1 = null
-			var a2 = null
-			var rv = null
-			var ra = null
-			var q = null
-
-			#### I don't get it, but works!
-			a1 = -result.global_transform.basis.z
-			a2 = anchor.global_transform.basis.z
-			rv = a1.cross(a2).normalized()
-			ra = a2.angle_to(a1)
-			if rv.length() != 0:
-				q = Quaternion(rv, -ra)
-				current_instance.quaternion = current_instance.quaternion * q
+			current_instance.global_transform = anchor.global_transform.inverse()
+			var a = anchor.global_transform.basis.z
+			var b = result.global_transform.basis.z
+			var c = a.cross(b).normalized()
+			var d = a.angle_to(b)
+			if c.length() != 0:
+				current_instance.global_rotate(c, d - PI)
 			else:
-				q = Quaternion(anchor.global_transform.basis.y, ra)
-				current_instance.quaternion = current_instance.quaternion * q
-				
+				current_instance.global_rotate(anchor.global_transform.basis.y.normalized(), PI)
 			current_instance.global_position = module.global_position + (result.global_position - module.global_position) - (anchor.global_position - current_instance.global_position)
 			
 			current_instance.visible = true

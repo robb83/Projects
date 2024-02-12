@@ -32,3 +32,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 9)
 script = ExtResource("2_2ex1c")
 
 [node name="ModuleRectangleOmni" parent="." instance=ExtResource("3_g5ema")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.17399, 2.52184, 2.54728)
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+radius = 0.25
