@@ -77,9 +77,9 @@ func mouse_pick():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	modules.push_back(preload("res://modules/module_rectangle_one.tscn"))
 	modules.push_back(preload("res://modules/module_rectangle_one_one.tscn"))
 	modules.push_back(preload("res://modules/module_rectangle_one_two.tscn"))
-	modules.push_back(preload("res://modules/module_rectangle_one.tscn"))
 	modules.push_back(preload("res://modules/module_rectangle_omni.tscn"))
 	modules.push_back(preload("res://modules/module_rectangle_long_two.tscn"))
 	modules.push_back(preload("res://modules/module_rectangle_long_two_half.tscn"))
@@ -140,16 +140,15 @@ func _process(delta):
 			var anchor = anchors[current_anchor]
 			current_instance.global_position = Vector3()
 			current_instance.global_rotation = Vector3()
+
 			
-			current_instance.global_transform = anchor.global_transform.inverse()
-			var a = anchor.global_transform.basis.z
-			var b = result.global_transform.basis.z
+			var a = result.global_transform.basis.z
+			var b = result.global_transform.basis.x
 			var c = a.cross(b).normalized()
-			var d = a.angle_to(b)
-			if c.length() != 0:
-				current_instance.global_rotate(c, d - PI)
-			else:
-				current_instance.global_rotate(anchor.global_transform.basis.y.normalized(), PI)
+			var d = PI
+			current_instance.global_transform = anchor.global_transform.inverse()
+			current_instance.global_rotate(result.global_transform.basis.get_rotation_quaternion().get_axis(), result.global_transform.basis.get_rotation_quaternion().get_angle())
+			current_instance.global_rotate(c, d)
 			current_instance.global_position = module.global_position + (result.global_position - module.global_position) - (anchor.global_position - current_instance.global_position)
 			
 			current_instance.visible = true
