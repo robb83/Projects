@@ -7,6 +7,7 @@
 script = ExtResource("1_bpgkt")
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
 
 [node name="CSGBox3D0" type="CSGBox3D" parent="CSGCombiner3D"]
 size = Vector3(1, 1, 4)
