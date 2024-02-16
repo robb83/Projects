@@ -10,6 +10,8 @@ const MyCustomGizmoPlugin = preload("res://addons/snap_to_surface/gizmo_area3d_o
 
 var gizmo_plugin = MyCustomGizmoPlugin.new()
 var selected_object = null
+var toolbar_item : HBoxContainer = null
+var tool_active = false
 	
 func add_anchor(node, gp, n):
 	var anchor = ModuleAnchor.new()
@@ -38,6 +40,7 @@ func get_hypotenuse_middle_point(p1, p2, p3):
 		return p1.lerp(p3, 0.5)
 	
 func _forward_3d_gui_input(camera, event):
+	if not tool_active: return
 	if not (event is InputEventMouse):
 		return
 		
@@ -80,6 +83,7 @@ func _forward_3d_gui_input(camera, event):
 			add_anchor(current, hit, normal)
 
 func _handles(object):
+	if not tool_active: return false
 	if object is CSGShape3D:
 		if selected_object == null or object != selected_object:
 			return true
@@ -94,7 +98,26 @@ func _enter_tree():
 	add_node_3d_gizmo_plugin(gizmo_plugin)
 	add_custom_type("Modul Anchor", "Area3D", ModuleAnchor, null)
 	
+	toolbar_item = create_toolbar_item()
+	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU, toolbar_item)
+	
 func _exit_tree():
 	# Clean-up of the plugin goes here.
 	remove_node_3d_gizmo_plugin(gizmo_plugin)
 	remove_custom_type("Modul Anchor")
+	remove_control_from_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU, toolbar_item)
+
+func create_toolbar_item():
+	var button = Button.new()
+	button.text = "A3DSTS"
+	button.tooltip_text = "Snap Area3D to selected face."
+	button.toggle_mode = true
+	button.pressed.connect(button_pressed)
+	button.theme_type_variation = "FlatButton"
+		
+	var toolbar = HBoxContainer.new()
+	toolbar.add_child(button)
+	return toolbar
+	
+func button_pressed():
+	tool_active = not tool_active

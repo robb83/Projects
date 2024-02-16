@@ -42,3 +42,7 @@ script = ExtResource("2_uju8l")
 [node name="@Area3D@25187" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
 transform = Transform3D(0.5, 0.707107, -0.5, -0.499999, 0.707107, 0.500001, 0.707107, -5.36442e-07, 0.707107, -0.625, 0.625, 0.676777)
 script = ExtResource("2_uju8l")
+
+[node name="@Area3D@21346" type="Area3D" parent="CSGCombiner3D" groups=["anchor"]]
+transform = Transform3D(0.853553, 0.146447, -0.5, 0.146447, 0.853553, 0.5, 0.5, -0.5, 0.707107, -0.625, 0.625, 0.676777)
+script = ExtResource("2_uju8l")

@@ -29,6 +29,4 @@ shadow_enabled = true
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 1.65632, 2.48603, 1.65632)
 environment = ExtResource("2_wfowv")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="SubViewport/Node3D"]
-
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
